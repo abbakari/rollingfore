@@ -1042,7 +1042,7 @@ const SalesBudget: React.FC = () => {
                       {tableData.map(row => (
                         <React.Fragment key={row.id}>
                           <tr className={`hover:bg-gray-50 ${row.selected ? 'bg-blue-50' : ''}`}>
-                            <td className="p-1 sm:p-2 border-b border-r border-gray-200">
+                            <td className="p-2 border-b border-r border-gray-200 text-center">
                               <input
                                 type="checkbox"
                                 className="w-4 h-4 accent-blue-600"
@@ -1052,12 +1052,12 @@ const SalesBudget: React.FC = () => {
                             </td>
                             {activeView === 'customer-item' ? (
                               <>
-                                <td className="p-1 sm:p-2 border-b border-r border-gray-200 text-xs">
+                                <td className="p-2 border-b border-r border-gray-200 text-xs">
                                   <div className="truncate" title={row.customer}>
                                     {row.customer}
                                   </div>
                                 </td>
-                                <td className="p-1 sm:p-2 border-b border-r border-gray-200 text-xs">
+                                <td className="p-2 border-b border-r border-gray-200 text-xs">
                                   <div className="truncate" title={row.item}>
                                     <div className="font-medium text-gray-900 truncate">
                                       {row.item}
@@ -1070,7 +1070,7 @@ const SalesBudget: React.FC = () => {
                               </>
                             ) : (
                               <>
-                                <td className="p-1 sm:p-2 border-b border-r border-gray-200 text-xs">
+                                <td className="p-2 border-b border-r border-gray-200 text-xs">
                                   <div className="truncate" title={row.item}>
                                     <div className="font-medium text-gray-900 truncate">
                                       {row.item}
@@ -1080,20 +1080,20 @@ const SalesBudget: React.FC = () => {
                                     </div>
                                   </div>
                                 </td>
-                                <td className="p-1 sm:p-2 border-b border-r border-gray-200 text-xs">
+                                <td className="p-2 border-b border-r border-gray-200 text-xs">
                                   <div className="truncate" title={row.customer}>
                                     {row.customer}
                                   </div>
                                 </td>
                               </>
                             )}
-                            <td className="p-1 sm:p-2 border-b border-gray-200 text-xs">
+                            <td className="p-2 border-b border-gray-200 text-xs text-center">
                               ${selectedYear2025 === '2025' ? (row.budget2025/1000).toFixed(0) : (row.budget2026/1000).toFixed(0)}k
                             </td>
-                            <td className="p-1 sm:p-2 border-b border-gray-200 text-xs">
+                            <td className="p-2 border-b border-gray-200 text-xs text-center">
                               ${selectedYear2025 === '2025' ? (row.actual2025/1000).toFixed(0) : '0'}k
                             </td>
-                            <td className="p-1 sm:p-2 border-b border-gray-200 bg-blue-50 text-xs">
+                            <td className="p-2 border-b border-gray-200 bg-blue-50 text-xs">
                               <input
                                 type="number"
                                 className="w-full p-1 text-center border border-gray-300 rounded text-xs"
@@ -1106,22 +1106,22 @@ const SalesBudget: React.FC = () => {
                                 }}
                               />
                             </td>
-                            <td className="p-1 sm:p-2 border-b border-gray-200 text-xs">
+                            <td className="p-2 border-b border-gray-200 text-xs text-center">
                               {row.rate}
                             </td>
-                            <td className="p-1 sm:p-2 border-b border-gray-200 text-xs hide-mobile">
+                            <td className="p-2 border-b border-gray-200 text-xs text-center">
                               {row.stock}
                             </td>
-                            <td className="p-1 sm:p-2 border-b border-gray-200 text-xs">
+                            <td className="p-2 border-b border-gray-200 text-xs text-center">
                               {row.git}
                             </td>
-                            <td className="p-1 sm:p-2 border-b border-gray-200 text-xs hide-mobile">
+                            <td className="p-2 border-b border-gray-200 text-xs text-center">
                               ${(row.budgetValue2026/1000).toFixed(0)}k
                             </td>
-                            <td className="p-1 sm:p-2 border-b border-gray-200 text-xs hide-mobile">
+                            <td className="p-2 border-b border-gray-200 text-xs text-center">
                               ${(row.discount/1000).toFixed(0)}k
                             </td>
-                            <td className="p-1 sm:p-2 border-b border-gray-200 text-xs">
+                            <td className="p-2 border-b border-gray-200 text-xs text-center">
                               <div className="flex gap-1">
                                 {editingRowId === row.id ? (
                                   <>
