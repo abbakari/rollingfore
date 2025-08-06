@@ -527,6 +527,37 @@ const SalesBudget: React.FC = () => {
     showNotification(`Yearly budget for "${budgetData.item}" created successfully and shared with Rolling Forecast`, 'success');
   };
 
+  // Submit budgets for manager approval
+  const handleSubmitForApproval = () => {
+    if (yearlyBudgets.length === 0) {
+      showNotification('No budgets available to submit for approval', 'error');
+      return;
+    }
+
+    setIsSubmittingForApproval(true);
+
+    try {
+      // Submit all current user's budgets for approval
+      const userBudgets = yearlyBudgets.filter(budget => budget.createdBy === user?.name);
+
+      if (userBudgets.length === 0) {
+        showNotification('No budgets created by you to submit', 'error');
+        return;
+      }
+
+      const workflowId = submitForApproval(userBudgets);
+
+      showNotification(
+        `Successfully submitted ${userBudgets.length} budget(s) for manager approval. Workflow ID: ${workflowId.slice(-6)}`,
+        'success'
+      );
+    } catch (error) {
+      showNotification('Failed to submit budgets for approval', 'error');
+    } finally {
+      setIsSubmittingForApproval(false);
+    }
+  };
+
   // Calculate totals based on filtered data and year selection
   const totalBudget2025 = selectedYear2025 === '2025'
     ? tableData.reduce((sum, item) => sum + item.budget2025, 0)
@@ -823,17 +854,29 @@ const SalesBudget: React.FC = () => {
               <div className="bg-white p-3 rounded-lg shadow-sm border-2 border-yellow-400">
                 <div className="flex flex-col gap-1">
                   {user?.role === 'salesman' && (
-                    <button
-                      onClick={() => {
-                        console.log('Yearly Budget button clicked');
-                        setIsYearlyBudgetModalOpen(true);
-                      }}
-                      className="bg-green-600 text-white font-semibold px-2 py-1 rounded-md text-xs flex items-center gap-1 hover:bg-green-700 transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-sm hover:shadow-md"
-                      title="Create new yearly budget plan with monthly breakdown (Salesman only)"
-                    >
-                      <Plus className="w-4 h-4" />
-                      <span>Yearly Budget</span>
-                    </button>
+                    <>
+                      <button
+                        onClick={() => {
+                          console.log('Yearly Budget button clicked');
+                          setIsYearlyBudgetModalOpen(true);
+                        }}
+                        className="bg-green-600 text-white font-semibold px-2 py-1 rounded-md text-xs flex items-center gap-1 hover:bg-green-700 transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-sm hover:shadow-md"
+                        title="Create new yearly budget plan with monthly breakdown (Salesman only)"
+                      >
+                        <Plus className="w-4 h-4" />
+                        <span>Yearly Budget</span>
+                      </button>
+
+                      <button
+                        onClick={handleSubmitForApproval}
+                        disabled={isSubmittingForApproval || yearlyBudgets.length === 0}
+                        className="bg-blue-600 text-white font-semibold px-2 py-1 rounded-md text-xs flex items-center gap-1 hover:bg-blue-700 transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+                        title="Submit all your budgets to manager for approval"
+                      >
+                        <Send className="w-4 h-4" />
+                        <span>{isSubmittingForApproval ? 'Submitting...' : 'Submit for Approval'}</span>
+                      </button>
+                    </>
                   )}
                   <button
                     onClick={() => {
