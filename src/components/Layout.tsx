@@ -199,8 +199,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         
         {/* Main content */}
         <main className="py-6">
-          <div className="px-4 sm:px-6 lg:px-8 max-w-full">
-            <div className="w-full overflow-x-auto">
+          <div className="page-container">
+            <div className="content-container">
               {children}
             </div>
           </div>
@@ -313,8 +313,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
         {/* Page content */}
         <main className="py-6">
-          <div className="px-4 sm:px-6 lg:px-8 max-w-full">
-            <div className="w-full overflow-x-auto">
+          <div className="page-container">
+            <div className="content-container">
               {children}
             </div>
           </div>
