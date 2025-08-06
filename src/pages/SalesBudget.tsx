@@ -976,12 +976,12 @@ const SalesBudget: React.FC = () => {
                   </button>
                 </div>
               ) : (
-                <div className="max-h-[600px] border border-gray-300 rounded-lg overflow-y-auto">
-                  <table className="w-full bg-white border-collapse table-fixed">
+                <div className="max-h-[600px] border border-gray-300 rounded-lg overflow-auto content-container">
+                  <table className="w-full bg-white border-collapse table-fixed responsive-table table-responsive">
                     {/* Sticky Header */}
                     <thead className="bg-gray-50 sticky top-0 z-10">
                       <tr>
-                        <th className="w-12 p-2 text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-r border-gray-200">
+                        <th className="w-12 p-1 sm:p-2 text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-r border-gray-200">
                           <input
                             type="checkbox"
                             className="w-4 h-4 accent-blue-600"
@@ -991,48 +991,48 @@ const SalesBudget: React.FC = () => {
                         </th>
                         {activeView === 'customer-item' ? (
                           <>
-                            <th className="w-32 p-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-r border-gray-200">
+                            <th className="w-32 p-1 sm:p-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-r border-gray-200">
                               Customer
                             </th>
-                            <th className="w-40 p-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-r border-gray-200">
-                              Item (Category - Brand)
+                            <th className="w-40 p-1 sm:p-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-r border-gray-200">
+                              Item (Cat-Brand)
                             </th>
                           </>
                         ) : (
                           <>
-                            <th className="w-40 p-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-r border-gray-200">
-                              Item (Category - Brand)
+                            <th className="w-40 p-1 sm:p-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-r border-gray-200">
+                              Item (Cat-Brand)
                             </th>
-                            <th className="w-32 p-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-r border-gray-200">
+                            <th className="w-32 p-1 sm:p-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-r border-gray-200">
                               Customer
                             </th>
                           </>
                         )}
-                        <th className="w-20 p-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">
+                        <th className="w-20 p-1 sm:p-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">
                           BUD {selectedYear2025}
                         </th>
-                        <th className="w-20 p-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">
+                        <th className="w-20 p-1 sm:p-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">
                           ACT {selectedYear2025}
                         </th>
-                        <th className="w-20 p-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200 bg-blue-50">
+                        <th className="w-20 p-1 sm:p-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200 bg-blue-50">
                           BUD {selectedYear2026}
                         </th>
-                        <th className="w-16 p-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">
+                        <th className="w-16 p-1 sm:p-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">
                           RATE
                         </th>
-                        <th className="w-14 p-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">
+                        <th className="w-14 p-1 sm:p-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200 hide-mobile">
                           STK
                         </th>
-                        <th className="w-14 p-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">
+                        <th className="w-14 p-1 sm:p-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">
                           GIT
                         </th>
-                        <th className="w-24 p-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">
+                        <th className="w-24 p-1 sm:p-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200 hide-mobile">
                           BUD {selectedYear2026} Value
                         </th>
-                        <th className="w-20 p-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">
+                        <th className="w-20 p-1 sm:p-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200 hide-mobile">
                           DISCOUNT
                         </th>
-                        <th className="w-20 p-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">
+                        <th className="w-20 p-1 sm:p-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">
                           Actions
                         </th>
                       </tr>
