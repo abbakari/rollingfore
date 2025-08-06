@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Layout from '../components/Layout';
 import { useAuth } from '../contexts/AuthContext';
 import { useBudget, YearlyBudgetData } from '../contexts/BudgetContext';
+import { useWorkflow } from '../contexts/WorkflowContext';
 import {
   TrendingUp,
   Info as InfoIcon,
@@ -51,6 +52,7 @@ interface SalesBudgetItem {
 const SalesBudget: React.FC = () => {
   const { user } = useAuth();
   const { addYearlyBudget, yearlyBudgets } = useBudget();
+  const { submitForApproval, getNotificationsForUser } = useWorkflow();
   const [selectedCustomer, setSelectedCustomer] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
   const [selectedBrand, setSelectedBrand] = useState('');
@@ -59,6 +61,7 @@ const SalesBudget: React.FC = () => {
   const [selectedYear2026, setSelectedYear2026] = useState('2026');
   const [activeView, setActiveView] = useState('customer-item');
   const [editingRowId, setEditingRowId] = useState<number | null>(null);
+  const [isSubmittingForApproval, setIsSubmittingForApproval] = useState(false);
 
   // Modal states
   const [isExportModalOpen, setIsExportModalOpen] = useState(false);
