@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth, canAccessDashboard } from './contexts/AuthContext';
 import { BudgetProvider } from './contexts/BudgetContext';
+import { WorkflowProvider } from './contexts/WorkflowContext';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import SalesBudget from './pages/SalesBudget';
@@ -155,9 +156,11 @@ const App: React.FC = () => {
   return (
     <AuthProvider>
       <BudgetProvider>
-        <Router>
-          <AppRoutes />
-        </Router>
+        <WorkflowProvider>
+          <Router>
+            <AppRoutes />
+          </Router>
+        </WorkflowProvider>
       </BudgetProvider>
     </AuthProvider>
   );
