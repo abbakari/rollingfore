@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import Layout from '../components/Layout';
+import { useAuth } from '../contexts/AuthContext';
+import { useBudget, YearlyBudgetData } from '../contexts/BudgetContext';
+import { useWorkflow } from '../contexts/WorkflowContext';
 import {
   TrendingUp,
   Info as InfoIcon,
@@ -9,7 +12,8 @@ import {
   Truck,
   Save,
   X,
-  Calendar
+  Calendar,
+  Send
 } from 'lucide-react';
 import ExportModal, { ExportConfig } from '../components/ExportModal';
 import NewAdditionModal, { NewItemData } from '../components/NewAdditionModal';
@@ -47,6 +51,9 @@ interface SalesBudgetItem {
 }
 
 const SalesBudget: React.FC = () => {
+  const { user } = useAuth();
+  const { addYearlyBudget, yearlyBudgets } = useBudget();
+  const { submitForApproval, getNotificationsForUser } = useWorkflow();
   const [selectedCustomer, setSelectedCustomer] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
   const [selectedBrand, setSelectedBrand] = useState('');
@@ -55,6 +62,7 @@ const SalesBudget: React.FC = () => {
   const [selectedYear2026, setSelectedYear2026] = useState('2026');
   const [activeView, setActiveView] = useState('customer-item');
   const [editingRowId, setEditingRowId] = useState<number | null>(null);
+  const [isSubmittingForApproval, setIsSubmittingForApproval] = useState(false);
 
   // Modal states
   const [isExportModalOpen, setIsExportModalOpen] = useState(false);
@@ -483,6 +491,18 @@ const SalesBudget: React.FC = () => {
   };
 
   const handleYearlyBudgetSave = (budgetData: any) => {
+    // Save to BudgetContext for sharing with RollingForecast
+    addYearlyBudget({
+      customer: budgetData.customer,
+      item: budgetData.item,
+      category: budgetData.category,
+      brand: budgetData.brand,
+      year: budgetData.year,
+      totalBudget: budgetData.totalBudget,
+      monthlyData: budgetData.monthlyData,
+      createdBy: user?.name || 'Unknown'
+    });
+
     // Add new yearly budget item to table
     const newId = Math.max(...originalTableData.map(item => item.id)) + 1;
     const newRow: SalesBudgetItem = {
@@ -505,7 +525,38 @@ const SalesBudget: React.FC = () => {
     };
 
     setOriginalTableData(prev => [...prev, newRow]);
-    showNotification(`Yearly budget for "${budgetData.item}" created successfully`, 'success');
+    showNotification(`Yearly budget for "${budgetData.item}" created successfully and shared with Rolling Forecast`, 'success');
+  };
+
+  // Submit budgets for manager approval
+  const handleSubmitForApproval = () => {
+    if (yearlyBudgets.length === 0) {
+      showNotification('No budgets available to submit for approval', 'error');
+      return;
+    }
+
+    setIsSubmittingForApproval(true);
+
+    try {
+      // Submit all current user's budgets for approval
+      const userBudgets = yearlyBudgets.filter(budget => budget.createdBy === user?.name);
+
+      if (userBudgets.length === 0) {
+        showNotification('No budgets created by you to submit', 'error');
+        return;
+      }
+
+      const workflowId = submitForApproval(userBudgets);
+
+      showNotification(
+        `Successfully submitted ${userBudgets.length} budget(s) for manager approval. Workflow ID: ${workflowId.slice(-6)}`,
+        'success'
+      );
+    } catch (error) {
+      showNotification('Failed to submit budgets for approval', 'error');
+    } finally {
+      setIsSubmittingForApproval(false);
+    }
   };
 
   // Calculate totals based on filtered data and year selection
@@ -803,17 +854,31 @@ const SalesBudget: React.FC = () => {
               {/* Action Buttons */}
               <div className="bg-white p-3 rounded-lg shadow-sm border-2 border-yellow-400">
                 <div className="flex flex-col gap-1">
-                  <button
-                    onClick={() => {
-                      console.log('Yearly Budget button clicked');
-                      setIsYearlyBudgetModalOpen(true);
-                    }}
-                    className="bg-green-600 text-white font-semibold px-2 py-1 rounded-md text-xs flex items-center gap-1 hover:bg-green-700 transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-sm hover:shadow-md"
-                    title="Create new yearly budget plan with monthly breakdown"
-                  >
-                    <Plus className="w-4 h-4" />
-                    <span>Yearly Budget</span>
-                  </button>
+                  {user?.role === 'salesman' && (
+                    <>
+                      <button
+                        onClick={() => {
+                          console.log('Yearly Budget button clicked');
+                          setIsYearlyBudgetModalOpen(true);
+                        }}
+                        className="bg-green-600 text-white font-semibold px-2 py-1 rounded-md text-xs flex items-center gap-1 hover:bg-green-700 transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-sm hover:shadow-md"
+                        title="Create new yearly budget plan with monthly breakdown (Salesman only)"
+                      >
+                        <Plus className="w-4 h-4" />
+                        <span>Yearly Budget</span>
+                      </button>
+
+                      <button
+                        onClick={handleSubmitForApproval}
+                        disabled={isSubmittingForApproval || yearlyBudgets.length === 0}
+                        className="bg-blue-600 text-white font-semibold px-2 py-1 rounded-md text-xs flex items-center gap-1 hover:bg-blue-700 transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+                        title="Submit all your budgets to manager for approval"
+                      >
+                        <Send className="w-4 h-4" />
+                        <span>{isSubmittingForApproval ? 'Submitting...' : 'Submit for Approval'}</span>
+                      </button>
+                    </>
+                  )}
                   <button
                     onClick={() => {
                       console.log('Distribution button clicked');
@@ -976,12 +1041,12 @@ const SalesBudget: React.FC = () => {
                   </button>
                 </div>
               ) : (
-                <div className="max-h-[600px] border border-gray-300 rounded-lg overflow-y-auto">
-                  <table className="w-full bg-white border-collapse table-fixed">
+                <div className="border border-gray-300 rounded-lg overflow-auto" style={{maxHeight: '600px'}}>
+                  <table className="sales-budget-table bg-white" style={{minWidth: '1200px'}}>
                     {/* Sticky Header */}
-                    <thead className="bg-gray-50 sticky top-0 z-10">
-                      <tr>
-                        <th className="w-12 p-2 text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-r border-gray-200">
+                    <thead className="bg-gray-50">
+                      <tr className="table-header-row">
+                        <th className="p-2 text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-r border-gray-200" style={{width: '50px'}}>
                           <input
                             type="checkbox"
                             className="w-4 h-4 accent-blue-600"
@@ -991,48 +1056,48 @@ const SalesBudget: React.FC = () => {
                         </th>
                         {activeView === 'customer-item' ? (
                           <>
-                            <th className="w-32 p-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-r border-gray-200">
+                            <th className="p-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-r border-gray-200" style={{width: '150px'}}>
                               Customer
                             </th>
-                            <th className="w-40 p-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-r border-gray-200">
+                            <th className="p-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-r border-gray-200" style={{width: '200px'}}>
                               Item (Category - Brand)
                             </th>
                           </>
                         ) : (
                           <>
-                            <th className="w-40 p-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-r border-gray-200">
+                            <th className="p-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-r border-gray-200" style={{width: '200px'}}>
                               Item (Category - Brand)
                             </th>
-                            <th className="w-32 p-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-r border-gray-200">
+                            <th className="p-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-r border-gray-200" style={{width: '150px'}}>
                               Customer
                             </th>
                           </>
                         )}
-                        <th className="w-20 p-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">
+                        <th className="p-2 text-center text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200" style={{width: '100px'}}>
                           BUD {selectedYear2025}
                         </th>
-                        <th className="w-20 p-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">
+                        <th className="p-2 text-center text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200" style={{width: '100px'}}>
                           ACT {selectedYear2025}
                         </th>
-                        <th className="w-20 p-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200 bg-blue-50">
+                        <th className="p-2 text-center text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200 bg-blue-50" style={{width: '100px'}}>
                           BUD {selectedYear2026}
                         </th>
-                        <th className="w-16 p-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">
+                        <th className="p-2 text-center text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200" style={{width: '80px'}}>
                           RATE
                         </th>
-                        <th className="w-14 p-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">
+                        <th className="p-2 text-center text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200" style={{width: '70px'}}>
                           STK
                         </th>
-                        <th className="w-14 p-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">
+                        <th className="p-2 text-center text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200" style={{width: '70px'}}>
                           GIT
                         </th>
-                        <th className="w-24 p-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">
+                        <th className="p-2 text-center text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200" style={{width: '120px'}}>
                           BUD {selectedYear2026} Value
                         </th>
-                        <th className="w-20 p-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">
+                        <th className="p-2 text-center text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200" style={{width: '100px'}}>
                           DISCOUNT
                         </th>
-                        <th className="w-20 p-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">
+                        <th className="p-2 text-center text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200" style={{width: '100px'}}>
                           Actions
                         </th>
                       </tr>
@@ -1042,7 +1107,7 @@ const SalesBudget: React.FC = () => {
                       {tableData.map(row => (
                         <React.Fragment key={row.id}>
                           <tr className={`hover:bg-gray-50 ${row.selected ? 'bg-blue-50' : ''}`}>
-                            <td className="p-2 border-b border-r border-gray-200">
+                            <td className="p-2 border-b border-r border-gray-200 text-center">
                               <input
                                 type="checkbox"
                                 className="w-4 h-4 accent-blue-600"
@@ -1087,10 +1152,10 @@ const SalesBudget: React.FC = () => {
                                 </td>
                               </>
                             )}
-                            <td className="p-2 border-b border-gray-200 text-xs">
+                            <td className="p-2 border-b border-gray-200 text-xs text-center">
                               ${selectedYear2025 === '2025' ? (row.budget2025/1000).toFixed(0) : (row.budget2026/1000).toFixed(0)}k
                             </td>
-                            <td className="p-2 border-b border-gray-200 text-xs">
+                            <td className="p-2 border-b border-gray-200 text-xs text-center">
                               ${selectedYear2025 === '2025' ? (row.actual2025/1000).toFixed(0) : '0'}k
                             </td>
                             <td className="p-2 border-b border-gray-200 bg-blue-50 text-xs">
@@ -1106,22 +1171,22 @@ const SalesBudget: React.FC = () => {
                                 }}
                               />
                             </td>
-                            <td className="p-2 border-b border-gray-200 text-xs">
+                            <td className="p-2 border-b border-gray-200 text-xs text-center">
                               {row.rate}
                             </td>
-                            <td className="p-2 border-b border-gray-200 text-xs">
+                            <td className="p-2 border-b border-gray-200 text-xs text-center">
                               {row.stock}
                             </td>
-                            <td className="p-2 border-b border-gray-200 text-xs">
+                            <td className="p-2 border-b border-gray-200 text-xs text-center">
                               {row.git}
                             </td>
-                            <td className="p-2 border-b border-gray-200 text-xs">
+                            <td className="p-2 border-b border-gray-200 text-xs text-center">
                               ${(row.budgetValue2026/1000).toFixed(0)}k
                             </td>
-                            <td className="p-2 border-b border-gray-200 text-xs">
+                            <td className="p-2 border-b border-gray-200 text-xs text-center">
                               ${(row.discount/1000).toFixed(0)}k
                             </td>
-                            <td className="p-2 border-b border-gray-200 text-xs">
+                            <td className="p-2 border-b border-gray-200 text-xs text-center">
                               <div className="flex gap-1">
                                 {editingRowId === row.id ? (
                                   <>

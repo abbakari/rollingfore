@@ -4,14 +4,20 @@ import UnifiedAddModal from '../components/UnifiedAddModal';
 import AddCategoryModal from '../components/AddCategoryModal';
 import AddBrandModal from '../components/AddBrandModal';
 import EditItemModal from '../components/EditItemModal';
-import { Package, Search, Filter, Plus, Edit, Trash2, AlertTriangle, TrendingUp, BarChart3, Tag, Award, Download, RefreshCw } from 'lucide-react';
+import SupplyChainIntegration from '../components/SupplyChainIntegration';
+import { Package, Search, Filter, Plus, Edit, Trash2, AlertTriangle, TrendingUp, BarChart3, Tag, Award, Download, RefreshCw, CheckCircle, Clock, Bell, Target } from 'lucide-react';
 import { InventoryItem, ItemCategory, ItemBrand, InventoryFormData, CategoryFormData, BrandFormData } from '../types/inventory';
+import { useWorkflow } from '../contexts/WorkflowContext';
+import { useAuth } from '../contexts/AuthContext';
 
 const InventoryManagement: React.FC = () => {
+  const { user } = useAuth();
+  const { getItemsByState, getNotificationsForUser, markNotificationAsRead } = useWorkflow();
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState<'all' | 'low' | 'normal' | 'high' | 'out_of_stock'>('all');
   const [filterCategory, setFilterCategory] = useState<string>('all');
   const [filterBrand, setFilterBrand] = useState<string>('all');
+  const [showApprovedItems, setShowApprovedItems] = useState(true);
   
   // Modal states
   const [isUnifiedAddModalOpen, setIsUnifiedAddModalOpen] = useState(false);
@@ -477,6 +483,11 @@ const InventoryManagement: React.FC = () => {
   return (
     <Layout>
       <div className="space-y-6">
+        {/* Supply Chain Integration Section (for supply_chain users) */}
+        {user?.role === 'supply_chain' && (
+          <SupplyChainIntegration />
+        )}
+
         {/* Page Header */}
         <div className="flex items-center justify-between">
           <div>
