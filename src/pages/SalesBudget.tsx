@@ -487,6 +487,18 @@ const SalesBudget: React.FC = () => {
   };
 
   const handleYearlyBudgetSave = (budgetData: any) => {
+    // Save to BudgetContext for sharing with RollingForecast
+    addYearlyBudget({
+      customer: budgetData.customer,
+      item: budgetData.item,
+      category: budgetData.category,
+      brand: budgetData.brand,
+      year: budgetData.year,
+      totalBudget: budgetData.totalBudget,
+      monthlyData: budgetData.monthlyData,
+      createdBy: user?.name || 'Unknown'
+    });
+
     // Add new yearly budget item to table
     const newId = Math.max(...originalTableData.map(item => item.id)) + 1;
     const newRow: SalesBudgetItem = {
@@ -509,7 +521,7 @@ const SalesBudget: React.FC = () => {
     };
 
     setOriginalTableData(prev => [...prev, newRow]);
-    showNotification(`Yearly budget for "${budgetData.item}" created successfully`, 'success');
+    showNotification(`Yearly budget for "${budgetData.item}" created successfully and shared with Rolling Forecast`, 'success');
   };
 
   // Calculate totals based on filtered data and year selection
