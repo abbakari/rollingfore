@@ -154,9 +154,11 @@ const AppRoutes: React.FC = () => {
 const App: React.FC = () => {
   return (
     <AuthProvider>
-      <Router>
-        <AppRoutes />
-      </Router>
+      <BudgetProvider>
+        <Router>
+          <AppRoutes />
+        </Router>
+      </BudgetProvider>
     </AuthProvider>
   );
 };
