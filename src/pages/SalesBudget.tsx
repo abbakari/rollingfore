@@ -977,10 +977,10 @@ const SalesBudget: React.FC = () => {
                 </div>
               ) : (
                 <div className="border border-gray-300 rounded-lg overflow-auto" style={{maxHeight: '600px'}}>
-                  <table className="w-full bg-white border-collapse" style={{minWidth: '1200px'}}>
+                  <table className="sales-budget-table bg-white" style={{minWidth: '1200px'}}>
                     {/* Sticky Header */}
-                    <thead className="bg-gray-50 sticky top-0 z-10">
-                      <tr>
+                    <thead className="bg-gray-50">
+                      <tr className="table-header-row">
                         <th className="p-2 text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-r border-gray-200" style={{width: '50px'}}>
                           <input
                             type="checkbox"
