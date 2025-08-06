@@ -105,3 +105,34 @@
   word-break: break-word;
   hyphens: auto;
 }
+
+/* Fixed table layout for better display */
+.sales-budget-table {
+  table-layout: fixed;
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.sales-budget-table th {
+  white-space: nowrap;
+  vertical-align: middle;
+  position: sticky;
+  top: 0;
+  background-color: #f9fafb;
+  z-index: 10;
+}
+
+.sales-budget-table td {
+  vertical-align: middle;
+}
+
+/* Ensure headers stay in single row */
+.table-header-row {
+  display: table-row;
+}
+
+.table-header-row th {
+  display: table-cell;
+  vertical-align: middle;
+}
