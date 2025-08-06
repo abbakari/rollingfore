@@ -805,17 +805,19 @@ const SalesBudget: React.FC = () => {
               {/* Action Buttons */}
               <div className="bg-white p-3 rounded-lg shadow-sm border-2 border-yellow-400">
                 <div className="flex flex-col gap-1">
-                  <button
-                    onClick={() => {
-                      console.log('Yearly Budget button clicked');
-                      setIsYearlyBudgetModalOpen(true);
-                    }}
-                    className="bg-green-600 text-white font-semibold px-2 py-1 rounded-md text-xs flex items-center gap-1 hover:bg-green-700 transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-sm hover:shadow-md"
-                    title="Create new yearly budget plan with monthly breakdown"
-                  >
-                    <Plus className="w-4 h-4" />
-                    <span>Yearly Budget</span>
-                  </button>
+                  {user?.role === 'salesman' && (
+                    <button
+                      onClick={() => {
+                        console.log('Yearly Budget button clicked');
+                        setIsYearlyBudgetModalOpen(true);
+                      }}
+                      className="bg-green-600 text-white font-semibold px-2 py-1 rounded-md text-xs flex items-center gap-1 hover:bg-green-700 transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-sm hover:shadow-md"
+                      title="Create new yearly budget plan with monthly breakdown (Salesman only)"
+                    >
+                      <Plus className="w-4 h-4" />
+                      <span>Yearly Budget</span>
+                    </button>
+                  )}
                   <button
                     onClick={() => {
                       console.log('Distribution button clicked');
