@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Layout from '../components/Layout';
+import { useAuth } from '../contexts/AuthContext';
 import {
   TrendingUp,
   Info as InfoIcon,
@@ -47,6 +48,7 @@ interface SalesBudgetItem {
 }
 
 const SalesBudget: React.FC = () => {
+  const { user } = useAuth();
   const [selectedCustomer, setSelectedCustomer] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
   const [selectedBrand, setSelectedBrand] = useState('');
