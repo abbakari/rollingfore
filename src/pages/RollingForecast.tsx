@@ -619,12 +619,12 @@ const RollingForecast: React.FC = () => {
         </div>
 
         {/* Table */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-          <div className="max-h-[500px] overflow-y-auto">
-            <table className="w-full">
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden content-container">
+          <div className="max-h-[500px] overflow-auto">
+            <table className="w-full responsive-table table-responsive">
               <thead className="bg-gray-50 border-b border-gray-200 sticky top-0 z-10">
                 <tr>
-                  <th className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-12">
+                  <th className="px-1 sm:px-2 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-12">
                     <input 
                       type="checkbox" 
                       className="rounded" 
@@ -632,8 +632,8 @@ const RollingForecast: React.FC = () => {
                       onChange={handleSelectAll}
                     />
                   </th>
-                  <th 
-                    className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 w-48"
+                  <th
+                    className="px-1 sm:px-2 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 w-48"
                     onClick={() => handleSort('customer')}
                   >
                     <div className="flex items-center gap-1">
@@ -641,8 +641,8 @@ const RollingForecast: React.FC = () => {
                       {getSortIcon('customer')}
                     </div>
                   </th>
-                  <th 
-                    className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 w-64"
+                  <th
+                    className="px-1 sm:px-2 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 w-64"
                     onClick={() => handleSort('item')}
                   >
                     <div className="flex items-center gap-1">
@@ -650,8 +650,8 @@ const RollingForecast: React.FC = () => {
                       {getSortIcon('item')}
                     </div>
                   </th>
-                  <th 
-                    className="px-2 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 w-20"
+                  <th
+                    className="px-1 sm:px-2 py-2 sm:py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 w-20"
                     onClick={() => handleSort('bud25')}
                   >
                     <div className="flex items-center justify-center gap-1">
@@ -659,8 +659,8 @@ const RollingForecast: React.FC = () => {
                       {getSortIcon('bud25')}
                     </div>
                   </th>
-                  <th 
-                    className="px-2 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 w-20"
+                  <th
+                    className="px-1 sm:px-2 py-2 sm:py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 w-20 hide-mobile"
                     onClick={() => handleSort('ytd25')}
                   >
                     <div className="flex items-center justify-center gap-1">
