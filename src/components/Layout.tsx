@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 import { useAuth, hasPermission, canAccessDashboard, getUserRoleName } from '../contexts/AuthContext';
 import { UserRole } from '../types/auth';
+import Navbar from './Navbar';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -29,6 +30,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
 
   if (!user) {
     return <div>Please log in to access the application.</div>;
@@ -152,9 +154,68 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   };
 
   const navigationItems = getNavigationItems();
+  const isSalesman = user.role === 'salesman';
+
+  // Horizontal Navigation Component for Salesmen
+  const HorizontalNavigation = () => (
+    <div className="bg-white shadow-sm border-b border-gray-200">
+      <div className="px-4 sm:px-6 lg:px-8">
+        <div className="flex space-x-8 overflow-x-auto">
+          {navigationItems.map((item) => {
+            const Icon = item.icon;
+            const isActive = location.pathname === item.href;
+            return (
+              <Link
+                key={item.name}
+                to={item.href}
+                className={`flex items-center space-x-2 py-4 px-2 border-b-2 font-medium text-sm whitespace-nowrap ${
+                  isActive
+                    ? 'border-blue-500 text-blue-600'
+                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                }`}
+              >
+                <Icon className="h-5 w-5" />
+                <span>{item.name}</span>
+              </Link>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+
+  if (isSalesman) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        {/* Navigation Header with Moving Words */}
+        <Navbar onPasswordModalOpen={() => setShowPasswordModal(true)} />
+        
+        {/* Spacer for fixed navbar */}
+        <div className="h-24"></div>
+        
+        {/* Horizontal Navigation */}
+        <HorizontalNavigation />
+        
+        {/* Main content */}
+        <main className="py-6">
+          <div className="px-4 sm:px-6 lg:px-8 max-w-full">
+            <div className="w-full overflow-x-auto">
+              {children}
+            </div>
+          </div>
+        </main>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
+      {/* Navigation Header with Moving Words */}
+      <Navbar onPasswordModalOpen={() => setShowPasswordModal(true)} />
+      
+      {/* Spacer for fixed navbar */}
+      <div className="h-24"></div>
+
       {/* Mobile sidebar */}
       <div className={`fixed inset-0 z-50 lg:hidden ${sidebarOpen ? 'block' : 'hidden'}`}>
         <div className="fixed inset-0 bg-gray-600 bg-opacity-75" onClick={() => setSidebarOpen(false)} />
@@ -190,7 +251,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       </div>
 
       {/* Desktop sidebar */}
-      <div className="hidden lg:fixed lg:inset-y-0 lg:flex lg:w-64 lg:flex-col">
+      <div className="hidden lg:fixed lg:inset-y-0 lg:flex lg:w-64 lg:flex-col lg:top-24">
         <div className="flex flex-col flex-grow bg-white border-r border-gray-200">
           <div className="flex h-16 items-center px-4">
             <h1 className="text-lg font-semibold text-gray-900">STMBudget</h1>
@@ -220,46 +281,35 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
       {/* Main content */}
       <div className="lg:pl-64">
-        {/* Top bar */}
-        <div className="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 border-b border-gray-200 bg-white px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8">
+        {/* Top bar for mobile */}
+        <div className="sticky top-24 z-40 flex h-16 shrink-0 items-center gap-x-4 border-b border-gray-200 bg-white px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8 lg:hidden">
           <button
             type="button"
-            className="-m-2.5 p-2.5 text-gray-700 lg:hidden"
+            className="-m-2.5 p-2.5 text-gray-700"
             onClick={() => setSidebarOpen(true)}
           >
             <Menu className="h-6 w-6" />
           </button>
-
           <div className="flex flex-1 gap-x-4 self-stretch lg:gap-x-6">
             <div className="flex flex-1"></div>
             <div className="flex items-center gap-x-4 lg:gap-x-6">
-              {/* User info */}
               <div className="flex items-center gap-x-2">
-                <div className="flex items-center gap-x-2">
-                  <User className="h-5 w-5 text-gray-400" />
-                  <span className="text-sm font-medium text-gray-700">{user.name}</span>
-                  <span className="inline-flex items-center rounded-full bg-blue-100 px-2 py-1 text-xs font-medium text-blue-800">
-                    {getUserRoleName(user.role)}
-                  </span>
-                </div>
+                <User className="h-5 w-5 text-gray-400" />
+                <span className="text-sm font-medium text-gray-700">{user.name}</span>
+                <span className="inline-flex items-center rounded-full bg-blue-100 px-2 py-1 text-xs font-medium text-blue-800">
+                  {getUserRoleName(user.role)}
+                </span>
               </div>
-
-              {/* Logout button */}
-              <button
-                onClick={handleLogout}
-                className="flex items-center gap-x-2 text-sm font-medium text-gray-700 hover:text-gray-900"
-              >
-                <LogOut className="h-5 w-5" />
-                Logout
-              </button>
             </div>
           </div>
         </div>
 
         {/* Page content */}
         <main className="py-6">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            {children}
+          <div className="px-4 sm:px-6 lg:px-8 max-w-full">
+            <div className="w-full overflow-x-auto">
+              {children}
+            </div>
           </div>
         </main>
       </div>
