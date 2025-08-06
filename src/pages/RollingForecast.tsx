@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import Layout from '../components/Layout';
-import { ChevronRight, Eye, CheckCircle, Plus, ChevronUp, ChevronDown, Minus, X, List, UserPlus } from 'lucide-react';
+import { ChevronRight, Eye, CheckCircle, Plus, ChevronUp, ChevronDown, Minus, X, List, UserPlus, Target } from 'lucide-react';
 import { Customer } from '../types/forecast';
+import { useBudget } from '../contexts/BudgetContext';
 
 const RollingForecast: React.FC = () => {
+  const { yearlyBudgets, getBudgetsByCustomer } = useBudget();
   const [selectedCustomer, setSelectedCustomer] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
   const [selectedBrand, setSelectedBrand] = useState('');
@@ -27,6 +29,7 @@ const RollingForecast: React.FC = () => {
   });
   const [selectedExistingCustomer, setSelectedExistingCustomer] = useState('');
   const [selectedExistingItem, setSelectedExistingItem] = useState('');
+  const [showBudgetData, setShowBudgetData] = useState(true);
 
   // Sample data
   const [customers, setCustomers] = useState<Customer[]>([
