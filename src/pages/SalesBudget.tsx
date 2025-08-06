@@ -976,12 +976,12 @@ const SalesBudget: React.FC = () => {
                   </button>
                 </div>
               ) : (
-                <div className="max-h-[600px] border border-gray-300 rounded-lg overflow-auto content-container">
-                  <table className="w-full bg-white border-collapse table-fixed responsive-table table-responsive">
+                <div className="border border-gray-300 rounded-lg overflow-auto" style={{maxHeight: '600px'}}>
+                  <table className="w-full bg-white border-collapse" style={{minWidth: '1200px'}}>
                     {/* Sticky Header */}
                     <thead className="bg-gray-50 sticky top-0 z-10">
                       <tr>
-                        <th className="w-12 p-1 sm:p-2 text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-r border-gray-200">
+                        <th className="p-2 text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-r border-gray-200" style={{width: '50px'}}>
                           <input
                             type="checkbox"
                             className="w-4 h-4 accent-blue-600"
@@ -991,48 +991,48 @@ const SalesBudget: React.FC = () => {
                         </th>
                         {activeView === 'customer-item' ? (
                           <>
-                            <th className="w-32 p-1 sm:p-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-r border-gray-200">
+                            <th className="p-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-r border-gray-200" style={{width: '150px'}}>
                               Customer
                             </th>
-                            <th className="w-40 p-1 sm:p-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-r border-gray-200">
-                              Item (Cat-Brand)
+                            <th className="p-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-r border-gray-200" style={{width: '200px'}}>
+                              Item (Category - Brand)
                             </th>
                           </>
                         ) : (
                           <>
-                            <th className="w-40 p-1 sm:p-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-r border-gray-200">
-                              Item (Cat-Brand)
+                            <th className="p-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-r border-gray-200" style={{width: '200px'}}>
+                              Item (Category - Brand)
                             </th>
-                            <th className="w-32 p-1 sm:p-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-r border-gray-200">
+                            <th className="p-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-r border-gray-200" style={{width: '150px'}}>
                               Customer
                             </th>
                           </>
                         )}
-                        <th className="w-20 p-1 sm:p-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">
+                        <th className="p-2 text-center text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200" style={{width: '100px'}}>
                           BUD {selectedYear2025}
                         </th>
-                        <th className="w-20 p-1 sm:p-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">
+                        <th className="p-2 text-center text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200" style={{width: '100px'}}>
                           ACT {selectedYear2025}
                         </th>
-                        <th className="w-20 p-1 sm:p-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200 bg-blue-50">
+                        <th className="p-2 text-center text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200 bg-blue-50" style={{width: '100px'}}>
                           BUD {selectedYear2026}
                         </th>
-                        <th className="w-16 p-1 sm:p-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">
+                        <th className="p-2 text-center text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200" style={{width: '80px'}}>
                           RATE
                         </th>
-                        <th className="w-14 p-1 sm:p-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200 hide-mobile">
+                        <th className="p-2 text-center text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200" style={{width: '70px'}}>
                           STK
                         </th>
-                        <th className="w-14 p-1 sm:p-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">
+                        <th className="p-2 text-center text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200" style={{width: '70px'}}>
                           GIT
                         </th>
-                        <th className="w-24 p-1 sm:p-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200 hide-mobile">
+                        <th className="p-2 text-center text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200" style={{width: '120px'}}>
                           BUD {selectedYear2026} Value
                         </th>
-                        <th className="w-20 p-1 sm:p-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200 hide-mobile">
+                        <th className="p-2 text-center text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200" style={{width: '100px'}}>
                           DISCOUNT
                         </th>
-                        <th className="w-20 p-1 sm:p-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">
+                        <th className="p-2 text-center text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200" style={{width: '100px'}}>
                           Actions
                         </th>
                       </tr>
