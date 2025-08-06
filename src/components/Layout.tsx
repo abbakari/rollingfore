@@ -20,6 +20,7 @@ import {
 import { useAuth, hasPermission, canAccessDashboard, getUserRoleName } from '../contexts/AuthContext';
 import { UserRole } from '../types/auth';
 import Navbar from './Navbar';
+import PasswordModal from './PasswordModal';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -204,6 +205,12 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             </div>
           </div>
         </main>
+
+        {/* Password Modal */}
+        <PasswordModal
+          isOpen={showPasswordModal}
+          onClose={() => setShowPasswordModal(false)}
+        />
       </div>
     );
   }
