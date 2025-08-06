@@ -436,6 +436,98 @@ const RollingForecast: React.FC = () => {
           </button>
         </div>
 
+        {/* Budget Data from Sales Budget */}
+        {yearlyBudgets.length > 0 && (
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <Target className="w-5 h-5 text-blue-600" />
+                <h2 className="text-lg font-semibold text-gray-900">Sales Budget Data</h2>
+                <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded-full">
+                  {yearlyBudgets.length} budget{yearlyBudgets.length !== 1 ? 's' : ''} available
+                </span>
+              </div>
+              <button
+                onClick={() => setShowBudgetData(!showBudgetData)}
+                className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+              >
+                {showBudgetData ? 'Hide' : 'Show'} Budget Data
+              </button>
+            </div>
+
+            {showBudgetData && (
+              <div className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {yearlyBudgets.map((budget) => (
+                    <div key={budget.id} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                      <div className="flex items-center justify-between mb-3">
+                        <h3 className="font-medium text-gray-900 truncate">{budget.item}</h3>
+                        <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">
+                          {budget.year}
+                        </span>
+                      </div>
+
+                      <div className="space-y-2 text-sm">
+                        <div className="flex justify-between">
+                          <span className="text-gray-600">Customer:</span>
+                          <span className="font-medium truncate ml-2">{budget.customer}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-gray-600">Category:</span>
+                          <span className="font-medium">{budget.category}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-gray-600">Brand:</span>
+                          <span className="font-medium">{budget.brand}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-gray-600">Total Budget:</span>
+                          <span className="font-bold text-green-600">
+                            ${(budget.totalBudget / 1000).toFixed(0)}k
+                          </span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-gray-600">Created by:</span>
+                          <span className="text-xs text-gray-500">{budget.createdBy}</span>
+                        </div>
+                      </div>
+
+                      {/* Monthly breakdown preview */}
+                      <div className="mt-3 pt-3 border-t border-gray-100">
+                        <div className="text-xs text-gray-600 mb-2">Monthly Budget Summary:</div>
+                        <div className="grid grid-cols-3 gap-1 text-xs">
+                          {budget.monthlyData.slice(0, 3).map((month, idx) => (
+                            <div key={idx} className="text-center">
+                              <div className="font-medium">{month.month}</div>
+                              <div className="text-gray-600">${(month.budgetValue * month.rate / 1000).toFixed(0)}k</div>
+                            </div>
+                          ))}
+                        </div>
+                        {budget.monthlyData.length > 3 && (
+                          <div className="text-xs text-gray-500 text-center mt-1">
+                            +{budget.monthlyData.length - 3} more months
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Target className="w-4 h-4 text-blue-600" />
+                    <span className="text-sm font-medium text-blue-900">Budget Integration</span>
+                  </div>
+                  <p className="text-sm text-blue-800">
+                    These budgets were created by salesman users in the Sales Budget dashboard and are automatically
+                    integrated into your rolling forecast calculations. Use this data to align your forecasts with planned sales targets.
+                  </p>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
         {/* Filters and Notes */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
           <div className="flex items-start gap-6">
